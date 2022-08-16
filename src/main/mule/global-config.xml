@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+	<configuration-properties doc:name="Configuration properties" doc:id="b06604a7-04ff-4dd5-b411-0805e336a2e0" file="properties\common.yaml" />
+	<configuration-properties doc:name="Configuration properties" doc:id="bc7ae76e-27b7-4add-83c3-52804917f26b" file="properties\app-${env}.yaml" />
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="ecbef11e-74e5-43c8-8ce8-b03741e10e9d" file="properties\app-${env}-secure.yaml" key="${key}" >
+		<secure-properties:encrypt algorithm="Blowfish" />
+	</secure-properties:config>
+	<configuration doc:name="Configuration" doc:id="8382b23c-cd1d-4071-9d77-260d2025cab8" defaultErrorHandler-ref="error-handler" />
+	<api-gateway:autodiscovery apiId="${autodiscovery.id}" ignoreBasePath="true" doc:name="API Autodiscovery" doc:id="a99aabb3-b195-4212-935a-434c76a437bc" flowRef="xyz-hosp-sys-api-main" />
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="1919259e-6414-479b-938d-06d81dfe7f7d" >
+		<db:my-sql-connection host="localhost" port="3306" user="root" password="admin" database="XYZ_Hospital" />
+	</db:config>
+</mule>

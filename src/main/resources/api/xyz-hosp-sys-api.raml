@@ -1,0 +1,143 @@
+#%RAML 1.0
+title: XYZ Hospital System API
+description: The XYZ ABC System API will allow us to perform CRUD Operations on the doctors and patients tables present in the XYZ_Hospital Database
+version: v1
+mediaType: application/json
+protocols: [HTTP,HTTPS]
+
+types:
+  Doctor: !include DataTypes/DoctorDataType.raml
+  Patient: !include DataTypes/PatientDataType.raml
+
+traits:
+  ErrorResponse: !include Traits/ErrorResponses.raml
+  ClientIdRequired: !include Traits/SecurityProperties.raml
+
+/doctors:
+  get:
+      is: [ClientIdRequired,ErrorResponse]
+      description: Get Doctor Data from Database
+      queryParameters:
+                id:
+                  description: id of the doctor
+                  type: string
+                  required: true
+      responses:
+         200:
+          body:
+            application/json:
+              type: Doctor
+              example:
+                !include Examples/Responses/GetDoctor.json
+  post:
+    is: [ClientIdRequired,ErrorResponse]
+    description: Post Doctor Data to Database
+    body:
+      application/json:
+        type: Doctor
+        example:
+          !include Examples/Requests/Doctor.json
+    responses:
+       200:
+        body:
+          application/json:
+            example:
+              !include Examples/Responses/CreateDoctor.json
+  put:
+    is: [ClientIdRequired,ErrorResponse]
+    description: Update Doctor Data in Database
+    queryParameters:
+              id:
+                description: id of the doctor
+                type: string
+                required: true
+    body:
+      application/json:
+        type: Doctor
+        example:
+          !include Examples/Requests/Doctor.json
+    responses:
+       200:
+        body:
+          application/json:
+            example:
+              !include Examples/Responses/UpdateDoctor.json
+  delete:
+      is: [ClientIdRequired,ErrorResponse]
+      description: Delete Doctor Data from Database
+      queryParameters:
+              id:
+                description: id of the doctor
+                type: string
+                required: true
+      responses:
+         200:
+          body:
+            application/json:
+              example:
+                !include Examples/Responses/DeleteDoctor.json
+                
+
+/patients:
+  get:
+      is: [ClientIdRequired,ErrorResponse]
+      description: Get Patients Data from Database
+      queryParameters:
+                id:
+                  description: id of the patient
+                  type: string
+                  required: true
+      responses:
+         200:
+          body:
+            application/json:
+              type: Patient
+              example:
+                !include Examples/Responses/GetPatient.json
+  post:
+    is: [ClientIdRequired,ErrorResponse]
+    description: Post Patient Data to Database
+    body:
+      application/json:
+        type: Patient
+        example:
+          !include Examples/Requests/Patient.json
+    responses:
+       200:
+        body:
+          application/json:
+            example:
+              !include Examples/Responses/CreatePatient.json
+  put:
+    is: [ClientIdRequired,ErrorResponse]
+    description: Update Patient Data in Database
+    queryParameters:
+              id:
+                description: id of the Patient
+                type: string
+                required: true
+    body:
+      application/json:
+        type: Patient
+        example:
+          !include Examples/Requests/Patient.json
+    responses:
+       200:
+        body:
+          application/json:
+            example:
+              !include Examples/Responses/UpdatePatient.json
+  delete:
+      is: [ClientIdRequired,ErrorResponse]
+      description: Delete Patient Data from Database
+      queryParameters:
+              id:
+                description: id of the Patient
+                type: string
+                required: true
+      responses:
+         200:
+          body:
+            application/json:
+              example:
+                !include Examples/Responses/DeletePatient.json

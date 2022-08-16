@@ -1,0 +1,9 @@
+{
+  "Id":1,
+  "Name":"Dr. Sharad Prabhakar",
+  "Contact":"987654321",
+  "Age":60,
+  "Email":"sharad@gmail.com",
+  "City":"Chandigarh",
+  "Speciality": "Shoulder Orthopedics"
+}

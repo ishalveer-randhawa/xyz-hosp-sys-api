@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd">
+	<error-handler name="error-handler" doc:id="20014c4b-f96f-48a9-99cf-ada35ac91302" >
+
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+			<ee:transform doc:name="Transform Message" doc:id="ada81852-c4e7-4e60-bac1-f8760dc1a3ce" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "errorMessage": "Message is incorrect. Bad-Request",
+  "statusCode": "400",
+  "errorType": error.errorType
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="ERROR" doc:name="log-error" doc:id="1d3603e4-bca2-4646-a86a-d2917b22b65a" message="#[payload]"/>
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "errorMessage": "Resource not found",
+  "statusCode": "404",
+  "errorType": error.errorType
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="ERROR" doc:name="log-error" doc:id="ce714994-e00b-49db-a2b0-ac64d0275ed6" message="#[payload]" />
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "errorMessage": "Method not allowed",
+  "statusCode": "405",
+  "errorType": error.errorType
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="ERROR" doc:name="log-error" doc:id="3682a474-701f-472c-a4b4-3015b14476f3" message="#[error.description]" />
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "errorMessage": "Not acceptable",
+  "statusCode": "406",
+  "errorType": error.errorType
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="ERROR" doc:name="log-error" doc:id="28532f0a-d10f-437a-a6da-94f4c4b27d54" message="#[payload]" />
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "errorMessage": "Unsupported media type",
+  "statusCode": "415",
+  "errorType": error.errorType
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="ERROR" doc:name="log-error" doc:id="03d1f9e1-bc2c-489d-9d29-64d3ca5e567a" message="#[payload]" />
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform>
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "errorMessage": "Not Implemented",
+  "statusCode": "406",
+  "errorType": error.errorType
+}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<logger level="ERROR" doc:name="log-error" doc:id="edfba4a9-8d68-4b74-bb6b-3fff5dd7f22e" message="#[payload]" />
+            
+</on-error-propagate>
+		<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e11bb8ed-96f2-4d0a-b5d8-09f059a27d76" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="6789a703-a5d1-4545-96e5-c3586d9685c7" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+{
+  "errorMessage": error.errordescription,
+  "errorType": error.errorType
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="ERROR" doc:name="log-error" doc:id="748ed011-30ba-4604-976b-2c4593058dfb" message="#[payload]" />
+		
+</on-error-propagate>
+        
+</error-handler>
+	
+	
+	</mule>
