@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
     <http:listener-config name="xyz-hosp-sys-api-httpListenerConfig">
         <http:listener-connection host="0.0.0.0" port="8081" />
     </http:listener-config>
@@ -123,8 +123,9 @@ output application/json
             </on-error-propagate>
         </error-handler>
     </flow>
-    <flow name="put:\doctors:application\json:xyz-hosp-sys-api-config">
-        <ee:transform>
+    <flow name="put:\doctors:application\json:xyz-hosp-sys-api-config" doc:id="aa3849bf-c49e-48cc-aed2-4e50b29d5680">
+		<flow-ref doc:name="update-doctor-impl-flow" doc:id="fc9389f2-a83e-421b-97a1-be8a975b43ad" name="update-doctor-impl-flow"/> 
+		<ee:transform doc:name="success-message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -136,7 +137,9 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="put:\patients:application\json:xyz-hosp-sys-api-config">
-        <ee:transform>
+    <flow-ref doc:name="update-patient-impl-flow" doc:id="b45f25a5-7758-4cef-b230-897313c7ea1b" name="update-patient-impl-flow"/>
+		
+		<ee:transform doc:name="success-message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -148,7 +151,9 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="delete:\doctors:xyz-hosp-sys-api-config">
-        <ee:transform>
+    <flow-ref doc:name="delete-doctor-impl-flow" doc:id="79d788bd-2fba-4e75-89be-f82726941714" name="delete-doctor-impl-flow"/>
+
+        <ee:transform doc:name="success-message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -160,7 +165,8 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="delete:\patients:xyz-hosp-sys-api-config">
-        <ee:transform>
+        <flow-ref doc:name="delete-patient-impl-flow" doc:id="ee8962b9-134d-4f36-9bf2-b713efe6080c" name="delete-patient-impl-flow"/>
+		<ee:transform doc:name="success-message">
             <ee:message>
                 <ee:set-payload><![CDATA[%dw 2.0
 output application/json
@@ -172,63 +178,35 @@ output application/json
         </ee:transform>
     </flow>
     <flow name="get:\doctors:xyz-hosp-sys-api-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  Id: 1,
-  Name: "Dr. Sharad Prabhakar",
-  Contact: "987654321",
-  Age: 60,
-  Email: "sharad@gmail.com",
-  City: "Chandigarh",
-  Speciality: "Shoulder Orthopedics"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+        <flow-ref doc:name="get-doctor-impl-flow" doc:id="a5376684-a013-4e9f-8881-53202abbcd9d" name="get-doctor-impl-flow"/>
     </flow>
-    <flow name="get:\patients:xyz-hosp-sys-api-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-{
-  Id: 1,
-  Name: "Ishalveer Singh Randhawa",
-  Contact: "987654321",
-  Age: 20,
-  City: "Chandigarh",
-  Doctor: "Dr. Sharad Prabhakar",
-  ReasonOfVisit: "SLAP Tear"
-}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+    <flow name="get:\patients:xyz-hosp-sys-api-config" doc:id="8d744ed6-b441-423d-a52d-bbfb3292ada2">
+        <flow-ref doc:name="get-patient-impl-flow" doc:id="ada3d363-0666-49dc-b668-b233690148d5" name="get-patient-impl-flow"/> 
     </flow>
     <flow name="post:\doctors:application\json:xyz-hosp-sys-api-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
+        <flow-ref doc:name="post-doctor-impl-flow" doc:id="af214ca6-5a9c-4a5f-be77-15f9b1dbe5e5" name="post-doctor-impl-flow"/>
+		<ee:transform doc:name="success-message" doc:id="3a48e0eb-a9ba-4dd8-b00f-80bbee0ffc8a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
 {
-  message: "Doctor Data has successfully been added to DB"
+  message: "Doctor Data has successfully been posted to DB"
 }]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+			</ee:message>
+		</ee:transform>
     </flow>
     <flow name="post:\patients:application\json:xyz-hosp-sys-api-config">
-        <ee:transform>
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
+<flow-ref doc:name="post-patient-impl-flow" doc:id="adc0f093-4850-409c-83f9-b4df312726ae" name="post-patient-impl-flow"/>
+		<ee:transform doc:name="success-message" doc:id="2298d01b-f387-45a0-b1c3-bf637423efe9" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
 output application/json
 ---
 {
-  message: "Patient Data has successfully been added to DB"
+  message: "Patient Data has successfully been posted to DB"
 }]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+			</ee:message>
+		</ee:transform>
     </flow>
-</mule>
+    </mule>

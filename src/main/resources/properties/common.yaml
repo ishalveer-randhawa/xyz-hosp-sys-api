@@ -1,4 +1,11 @@
 #COMMON PROPERTIES
+
+#HTTP
+http:
+  host: "0.0.0.0"
+  port: "8081"
+  basePath: "/*"
+
 #API Autodiscovery
 autodiscovery:
   id: "18066598"

@@ -7,7 +7,6 @@ http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/sc
 http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<configuration-properties doc:name="Configuration properties" doc:id="b06604a7-04ff-4dd5-b411-0805e336a2e0" file="properties\common.yaml" />
-	<configuration-properties doc:name="Configuration properties" doc:id="bc7ae76e-27b7-4add-83c3-52804917f26b" file="properties\app-${env}.yaml" />
 	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="ecbef11e-74e5-43c8-8ce8-b03741e10e9d" file="properties\app-${env}-secure.yaml" key="${key}" >
 		<secure-properties:encrypt algorithm="Blowfish" />
 	</secure-properties:config>
@@ -16,4 +15,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="1919259e-6414-479b-938d-06d81dfe7f7d" >
 		<db:my-sql-connection host="localhost" port="3306" user="root" password="admin" database="XYZ_Hospital" />
 	</db:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="6bb8abfa-49b1-48a5-8c0b-0629414438f6" file="properties\app-${env}.yaml" />
+	<global-property doc:name="Global Property" doc:id="d3c11243-ee97-4ca2-b30c-39876d794071" name="env" value="dev" />
+	<global-property doc:name="Global Property" doc:id="4712e42d-4df2-49e4-b83b-1f5c4dda6ea2" name="key" value="exam#2022" />
 </mule>

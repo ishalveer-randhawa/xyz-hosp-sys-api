@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-doctor-impl-flow" doc:id="fa2e9505-f6fb-462e-9417-8f9655c8fc15" >
+		<db:select doc:name="doctors" doc:id="1265f065-2e47-4a91-8a5e-cb679c37ba17" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from doctors where id = :id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"id" : attributes.queryParams.id
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="doctor-details" doc:id="2b83876e-f9f6-484f-b6dd-33bb791c215f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="get-patient-impl-flow" doc:id="69427ff6-d0c0-4e9b-a0dc-5b4cbb9de9c7" >
+		<db:select doc:name="patients" doc:id="7c612344-eade-4733-8007-68cb72c56548" config-ref="Database_Config" >
+			<db:sql ><![CDATA[select * from patients where id = :id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	"id" : attributes.queryParams.id
+}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="patient-details" doc:id="59cdfdc1-d758-4221-9d1e-410f1f92e3a8" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="post-doctor-impl-flow" doc:id="a21ad64e-b32d-4a1e-b94a-b6b2beb896ed" >
+		<db:insert doc:name="doctors" doc:id="ab516f68-2dc1-4f21-a098-1795a40a9187" config-ref="Database_Config">
+			<db:sql ><![CDATA[insert into doctors values(:id,:name,:contact,:age,:email,:city,:speciality);]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+'id':payload.Id,
+'name':payload.Name,
+'contact':payload.Contact,
+'city':payload.City,
+'age':payload.Age,
+'email':payload.Email,
+'speciality':payload.Speciality
+}]]]></db:input-parameters>
+		</db:insert>
+	</flow>
+	<flow name="post-patient-impl-flow" doc:id="4623fccf-fdcb-4be5-a514-84207cbff66e" >
+		<db:insert doc:name="patients" doc:id="d60d9bf5-e0fe-4385-8092-b47c6533111d" config-ref="Database_Config" >
+			<db:sql ><![CDATA[insert into patients values(:id,:name,:contact,:age,:city,:doctor,:rov);]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+'id':payload.Id,
+'name':payload.Name,
+'contact':payload.Contact,
+'city':payload.City,
+'age':payload.Age,
+'doctor':payload.Doctor,
+'rov':payload.ReasonOfVisit,
+}]]]></db:input-parameters>
+		</db:insert>
+	</flow>
+	<flow name="delete-doctor-impl-flow" doc:id="00a0f08f-745a-4f1e-ac07-881c3d903caf" >
+		<db:delete doc:name="doctor" doc:id="cf440a97-52f3-4fb7-bcf4-a9f4098f4c13" config-ref="Database_Config">
+			<db:sql ><![CDATA[delete from doctors where id = :id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	id: attributes.queryParams.id
+}]]]></db:input-parameters>
+		</db:delete>
+	</flow>
+	
+	<flow name="delete-patient-impl-flow" doc:id="b80b3f3f-1dd2-467d-8c81-5931d6a32fa3" >
+		<db:delete doc:name="patients" doc:id="36fcd8b6-8454-4dd4-9c3b-b8b1d4548880" config-ref="Database_Config" >
+			<db:sql ><![CDATA[delete from patients where id = :id]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	id: attributes.queryParams.id
+}]]]></db:input-parameters>
+		</db:delete>
+	</flow>
+	<flow name="update-doctor-impl-flow" doc:id="6496cbf5-0d2a-4967-a7e4-94044a55852b" >
+		<db:update doc:name="doctor" doc:id="2ef66fef-2d39-43d8-919f-286ae9037df0" config-ref="Database_Config">
+			<db:sql ><![CDATA[UPDATE doctors
+SET 
+    id= :id,
+    name = :name,
+    contact = :contact ,
+    age = :age,
+    email = :email,
+    city = :city,
+    speciality = :speciality
+WHERE
+    id = :inputid;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+'id':payload.Id,
+'name':payload.Name,
+'contact':payload.Contact,
+'city':payload.City,
+'age':payload.Age,
+'email':payload.Email,
+'speciality':payload.Speciality,
+'inputid':attributes.queryParams.id
+}]]]></db:input-parameters>
+		</db:update>
+	</flow>
+	<flow name="update-patient-impl-flow" doc:id="41947c88-5f40-4858-ab5a-095f78c001a7" >
+		<db:update doc:name="patients" doc:id="5533178f-630b-4638-83a7-5da73c55ff02" config-ref="Database_Config" >
+			<db:sql ><![CDATA[UPDATE patients
+SET 
+    id= :id,
+    name = :name,
+    contact = :contact ,
+    age = :age,
+    city = :city,
+    doctor = :doctor,
+    reason_of_visit = :rov
+WHERE
+    id = :inputid;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+'id':payload.Id,
+'name':payload.Name,
+'contact':payload.Contact,
+'city':payload.City,
+'age':payload.Age,
+'doctor':payload.Doctor,
+'rov':payload.ReasonOfVisit,
+'inputid':attributes.queryParams.id
+}]]]></db:input-parameters>
+		</db:update>
+	</flow>
+	
+</mule>
